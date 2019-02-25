@@ -1,16 +1,14 @@
 package com.balamaci.reactor;
 
 import com.balamaci.reactor.util.Helpers;
-import javafx.util.Pair;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.CompletableFuture;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
-
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Operators for working with multiple streams
@@ -119,7 +117,7 @@ public class Part03MergingStreams implements BaseTestFlux {
         Flux<Long> numbers = Flux.interval(Duration.of(1, ChronoUnit.SECONDS))
                                     .take(4);
 
-        Flux flux = Flux.combineLatest(colors, numbers, Pair::new);
+        Flux flux = Flux.combineLatest(colors, numbers, Tuples::of);
         subscribeWithLog(flux);
     }
 }

@@ -1,13 +1,13 @@
 package com.balamaci.reactor;
 
-import javafx.util.Pair;
-import org.junit.Test;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.GroupedFlux;
-
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import org.junit.Test;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.GroupedFlux;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 /**
  * @author sbalamaci
@@ -111,10 +111,10 @@ public class Part05AdvancedOperators implements BaseTestFlux {
 //                .groupBy(val -> "length" + val.length());
 
 
-        Flux<Pair<String, Long>> colorCountStream = groupedColorsStream
+        Flux<Tuple2<String, Long>> colorCountStream = groupedColorsStream
                 .flatMap(groupedColor -> groupedColor
                                             .count()
-                                            .map(count -> new Pair<>(groupedColor.key(), count))
+                                            .map(count -> Tuples.of(groupedColor.key(), count))
                 );
 
         subscribeWithLogWaiting(colorCountStream);

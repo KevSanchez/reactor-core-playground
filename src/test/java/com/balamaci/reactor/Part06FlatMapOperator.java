@@ -1,15 +1,15 @@
 package com.balamaci.reactor;
 
 import com.balamaci.reactor.util.Helpers;
-import javafx.util.Pair;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.GroupedFlux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 /**
  * The flatMap operator is so important and has so many different uses it deserves it's own category to explain
@@ -48,14 +48,14 @@ public class Part06FlatMapOperator implements BaseTestFlux {
     public void flatMapSubstreamOperations() {
         Flux<String> colors = Flux.just("orange", "red", "green", "blue");
 
-        Flux<Pair<String, Long>> colorsCounted = colors
+        Flux<Tuple2<String, Long>> colorsCounted = colors
                 .flatMap(colorName -> {
                     Flux<Long> timer = Flux.interval(Duration.of(2, ChronoUnit.SECONDS));
 
                     return simulateRemoteOperation(colorName) // <- Still a stream
                                     .zipWith(timer, (val, timerVal) -> val)
                                     .count()
-                                    .map(counter -> new Pair<>(colorName, counter));
+                                    .map(counter -> Tuples.of(colorName, counter));
                     }
                 );
 
@@ -119,11 +119,11 @@ public class Part06FlatMapOperator implements BaseTestFlux {
                                                                    .groupBy(val -> val);//grouping key
                                                                    // is the String itself, the color
 
-        Flux<Pair<String, Long>> countedColors = groupedColorsStream
+        Flux<Tuple2<String, Long>> countedColors = groupedColorsStream
                                                     .flatMap(groupedObservable -> groupedObservable
                                                                  .count()
                                                                  .map(countVal ->
-                                                                        new Pair<>(groupedObservable.key(), countVal))
+                                                                     Tuples.of(groupedObservable.key(), countVal))
                                                     );
         subscribeWithLogWaiting(countedColors);
     }

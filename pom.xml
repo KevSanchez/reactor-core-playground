@@ -23,6 +23,11 @@
             <artifactId>reactor-core</artifactId>
             <version>${reactor.core}</version>
         </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <version>3.2.3.RELEASE</version>
+        </dependency>
 
         <dependency>
             <groupId>io.javaslang</groupId>
